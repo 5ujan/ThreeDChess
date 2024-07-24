@@ -31,11 +31,11 @@ const Chess = () => {
       board.current = new THREE.Group();
 
       let squareNumber = 1;
-      for (let x = 0; x < 10; x++) {
-        for (let z = 0; z < 10; z++) {
+      for (let x = 0; x < 8; x++) {
+        for (let z = 0; z < 8; z++) {
           let cube;
-          const posX = x - 4.5;
-          const posZ = z - 4.5;
+          const posX = x - 3.5;
+          const posZ = z - 3.5;
           if (z % 2 === 0) {
             cube = new THREE.Mesh(
               square,
