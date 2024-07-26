@@ -1,10 +1,12 @@
 import React from "react";
-import Chess from "./Chess";
+import Chess from "./pages/Chess";
+import ThreeModelViewer from "./Model";
 
 const App = () => {
   return (
     <div>
       <Chess />
+      {/* <ThreeModelViewer></ThreeModelViewer> */}
     </div>
   );
 };

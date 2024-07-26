@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+model.glb
+terrain-4.glb
+Model.jsx
