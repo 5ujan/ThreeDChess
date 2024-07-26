@@ -12,6 +12,12 @@ const Chess = () => {
   const controls = useRef(null);
   const rotationAnimation = useRef(null);
 
+  // Textures for background
+  const textures = useRef([]);
+  const currentTextureIndex = useRef(0);
+  const fadeProgress = useRef(0);
+  const fadeDirection = useRef(1); // 1 for fade in, -1 for fade out
+
   useEffect(() => {
     const initialize = () => {
       camera.current = new THREE.PerspectiveCamera(
@@ -24,10 +30,20 @@ const Chess = () => {
       renderer.current = new THREE.WebGLRenderer({ canvas: canvasRef.current });
       renderer.current.setSize(window.innerWidth, window.innerHeight);
 
-      const ambientLight = new THREE.AmbientLight(0xffffff); // Soft white light
+      // Load background textures
+      const loader = new THREE.TextureLoader();
+      // loader.load("/white-background (1).jpg", (texture) => {
+      //   textures.current[0] = texture; // First texture
+      //   scene.current.background = textures.current[0]; // Set initial background
+      // });
+      // loader.load("/black-background (1).jpg", (texture) => {
+      //   textures.current[1] = texture; // Second texture
+      // });
+
+      const ambientLight = new THREE.AmbientLight(0xaaaaaaaa); // Soft white light
       scene.current.add(ambientLight);
 
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Bright white light
+      const directionalLight = new THREE.DirectionalLight(0xffffffff, 1); // Bright white light
       directionalLight.position.set(5, 10, 7.5);
       scene.current.add(directionalLight);
 
@@ -36,7 +52,7 @@ const Chess = () => {
       scene.current.add(axesHelper);
 
       // Set the initial camera position
-      camera.current.position.set(0, 7.5, 7.5);
+      camera.current.position.set(0, 7.5, -7.5);
       camera.current.lookAt(0, 0, 0); // Look at the center of the board
 
       controls.current = new OrbitControls(
@@ -47,6 +63,52 @@ const Chess = () => {
       controls.current.enablePan = false;
       controls.current.maxPolarAngle = Math.PI / 2;
       controls.current.enableDamping = true;
+    };
+
+    const handleKeyPress = (event) => {
+      if (event.code === "Space") {
+        console.log("Space pressed, starting rotation");
+        rotateCamera();
+      }
+    };
+
+    const rotateCamera = () => {
+      if (rotationAnimation.current) {
+        cancelAnimationFrame(rotationAnimation.current);
+      }
+
+      const startAngle = Math.atan2(
+        camera.current.position.z,
+        camera.current.position.x
+      );
+      const endAngle = startAngle + Math.PI;
+      const duration = 1000; // 1 second
+      const startTime = performance.now();
+
+      const animateRotation = (currentTime) => {
+        const elapsedTime = currentTime - startTime;
+        const progress = Math.min(elapsedTime / duration, 1);
+        const currentAngle = startAngle + (endAngle - startAngle) * progress;
+
+        const radius = Math.sqrt(
+          Math.pow(camera.current.position.x, 2) +
+            Math.pow(camera.current.position.z, 2)
+        );
+
+        camera.current.position.x = radius * Math.cos(currentAngle);
+        camera.current.position.z = radius * Math.sin(currentAngle);
+        camera.current.lookAt(0, 0, 0);
+        controls.current.update();
+
+        if (progress < 1) {
+          rotationAnimation.current = requestAnimationFrame(animateRotation);
+        } else {
+          rotationAnimation.current = null;
+          console.log("Rotation complete");
+        }
+      };
+
+      rotationAnimation.current = requestAnimationFrame(animateRotation);
     };
 
     const animate = () => {
@@ -65,9 +127,16 @@ const Chess = () => {
     };
 
     window.addEventListener("resize", onWindowResize);
+    window.addEventListener("keydown", handleKeyPress);
 
     return () => {
       window.removeEventListener("resize", onWindowResize);
+      window.removeEventListener("keydown", handleKeyPress);
+
+      if (rotationAnimation.current) {
+        cancelAnimationFrame(rotationAnimation.current);
+      }
+
       // Clean up Three.js objects to prevent memory leaks
       scene.current.traverse((obj) => {
         if (obj instanceof THREE.Mesh) {
