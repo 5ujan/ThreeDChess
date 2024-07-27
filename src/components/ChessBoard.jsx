@@ -9,6 +9,16 @@ const ChessBoard = ({ scene }) => {
     if (!scene) return;
 
     const square = new THREE.BoxGeometry(1, 0.1, 1);
+    // const textureLoader = new THREE.TextureLoader();
+    // const lightWoodTexture = textureLoader.load("/light_wood.png"); // Replace with your path
+    // const darkWoodTexture = textureLoader.load("/dark_wood.png"); // Replace with your path
+
+    // const lightsquare = new THREE.MeshStandardMaterial({
+    //   map: lightWoodTexture,
+    // });
+    // const darksquare = new THREE.MeshStandardMaterial({ map: darkWoodTexture });
+    // board.current = new THREE.Group();
+
     const lightsquare = new THREE.MeshBasicMaterial({ color: 0xe0c4a8 });
     const darksquare = new THREE.MeshBasicMaterial({ color: 0x6a4236 });
 
@@ -38,6 +48,17 @@ const ChessBoard = ({ scene }) => {
         board.current.add(cube);
       }
     }
+
+    // const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Soft white light
+    // scene.add(ambientLight);
+
+    // const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5); // Bright white light
+    // directionalLight.position.set(5, 10, 7.5);
+    // scene.add(directionalLight);
+
+    // const pointLight = new THREE.PointLight(0xffffff, 1, 100); // Intensity, Distance
+    // pointLight.position.set(0, 10, 0);
+    // scene.add(pointLight);
 
     scene.add(board.current);
 

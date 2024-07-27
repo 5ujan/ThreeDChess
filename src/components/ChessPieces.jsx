@@ -1,13 +1,13 @@
-// ChessPieces.jsx
 import React, { useRef, useEffect } from "react";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import * as THREE from "three";
-import { coordinates } from "./coordinates"; // Import the coordinates
+import { coordinates } from "./coordinates";
+import { gsap } from "gsap";
 
 const ChessPieces = ({ scene }) => {
-  const pieces = useRef([]);
+  const pieces = useRef(new Map());
 
-  const loadModel = (square, modelPath) => {
+  const loadModel = (square, modelPath, name) => {
     const { x, z } = coordinates[square];
     const loader = new GLTFLoader();
     loader.load(
@@ -16,7 +16,8 @@ const ChessPieces = ({ scene }) => {
         const model = gltf.scene;
         model.position.set(x, 0.0, z); // Position model on top of the square
         model.scale.set(0.2, 0.2, 0.2);
-        pieces.current.push(model);
+        model.name = name;
+        pieces.current.set(square, model); // Store piece by square position
         scene.add(model);
       },
       undefined,
@@ -26,45 +27,70 @@ const ChessPieces = ({ scene }) => {
     );
   };
 
+  const movePiece = (startSquare, endSquare) => {
+    const piece = pieces.current.get(startSquare);
+    const { x, z } = coordinates[endSquare];
+
+    if (piece) {
+      // Move piece using gsap
+      gsap.to(piece.position, {
+        duration: 2, // Duration of the move in seconds
+        x: x,
+        z: z,
+        ease: "power2.inOut",
+        onComplete: () => {
+          pieces.current.delete(startSquare); // Remove the reference from the map
+          pieces.current.set(endSquare, piece); // Update the reference in the map
+        },
+      });
+    }
+  };
+
   useEffect(() => {
     if (!scene) return;
 
     // Clear any existing pieces
     pieces.current.forEach((piece) => scene.remove(piece));
-    pieces.current = [];
+    pieces.current.clear();
 
     // Load pawns
     const alpha = "abcdefgh";
     for (let i = 1; i <= 8; i++) {
-      loadModel(`${alpha[i - 1]}2`, "/white/white-pawn.glb"); // White pawns
-      loadModel(`${alpha[i - 1]}7`, "/black/black-pawn.glb"); // Black pawns
+      loadModel(`${alpha[i - 1]}2`, "/white/white-pawn.glb", `white-pawn-${i}`); // White pawns
+      loadModel(`${alpha[i - 1]}7`, "/black/black-pawn.glb", `black-pawn-${i}`); // Black pawns
     }
 
-    // Load rooks
-    loadModel("a1", "/white/white-rook.glb");
-    loadModel("h1", "/white/white-rook.glb");
-    loadModel("a8", "/black/black-rook.glb");
-    loadModel("h8", "/black/black-rook.glb");
+    // Load other pieces (rooks, knights, bishops, queens, kings)
+    loadModel("a1", "/white/white-rook.glb", "white-rook-a1");
+    loadModel("h1", "/white/white-rook.glb", "white-rook-h1");
+    loadModel("a8", "/black/black-rook.glb", "black-rook-a8");
+    loadModel("h8", "/black/black-rook.glb", "black-rook-h8");
+    loadModel("b1", "/white/white-knight.glb", "white-knight-b1");
+    loadModel("g1", "/white/white-knight.glb", "white-knight-g1");
+    loadModel("b8", "/black/black-knight.glb", "black-knight-b8");
+    loadModel("g8", "/black/black-knight.glb", "black-knight-g8");
+    loadModel("c1", "/white/white-bishop.glb", "white-bishop-c1");
+    loadModel("f1", "/white/white-bishop.glb", "white-bishop-f1");
+    loadModel("c8", "/black/black-bishop.glb", "black-bishop-c8");
+    loadModel("f8", "/black/black-bishop.glb", "black-bishop-f8");
+    loadModel("d1", "/white/white-queen.glb", "white-queen-d1");
+    loadModel("d8", "/black/black-queen.glb", "black-queen-d8");
+    loadModel("e1", "/white/white-king.glb", "white-king-e1");
+    loadModel("e8", "/black/black-king.glb", "black-king-e8");
 
-    // Load knights
-    loadModel("b1", "/white/white-knight.glb");
-    loadModel("g1", "/white/white-knight.glb");
-    loadModel("b8", "/black/black-knight.glb");
-    loadModel("g8", "/black/black-knight.glb");
-
-    // Load bishops
-    loadModel("c1", "/white/white-bishop.glb");
-    loadModel("f1", "/white/white-bishop.glb");
-    loadModel("c8", "/black/black-bishop.glb");
-    loadModel("f8", "/black/black-bishop.glb");
-
-    // Load queens
-    loadModel("d1", "/white/white-queen.glb");
-    loadModel("d8", "/black/black-queen.glb");
-
-    // Load kings
-    loadModel("e1", "/white/white-king.glb");
-    loadModel("e8", "/black/black-king.glb");
+    // Move the pawn from a2 to a3 after 10 seconds
+    setTimeout(() => {
+      movePiece("a2", "a3");
+    }, 10000);
+    setTimeout(() => {
+      movePiece("a3", "a4");
+    }, 12000);
+    setTimeout(() => {
+      movePiece("a2", "a4");
+    }, 14000);
+    setTimeout(() => {
+      movePiece("b2", "b4");
+    }, 14000);
 
     return () => {
       pieces.current.forEach((piece) => {
@@ -76,6 +102,7 @@ const ChessPieces = ({ scene }) => {
           }
         });
       });
+      pieces.current.clear();
     };
   }, [scene]);
 

@@ -12,11 +12,6 @@ const Chess = () => {
   const controls = useRef(null);
   const rotationAnimation = useRef(null);
 
-  // Textures for background
-  const textures = useRef([]);
-  const currentTextureIndex = useRef(0);
-  const fadeProgress = useRef(0);
-  const fadeDirection = useRef(1); // 1 for fade in, -1 for fade out
 
   useEffect(() => {
     const initialize = () => {
@@ -31,20 +26,32 @@ const Chess = () => {
       renderer.current.setSize(window.innerWidth, window.innerHeight);
 
       // Load background textures
-      const loader = new THREE.TextureLoader();
-      // loader.load("/white-background (1).jpg", (texture) => {
-      //   textures.current[0] = texture; // First texture
-      //   scene.current.background = textures.current[0]; // Set initial background
-      // });
-      // loader.load("/black-background (1).jpg", (texture) => {
-      //   textures.current[1] = texture; // Second texture
-      // });
+    const loader = new THREE.CubeTextureLoader();
+    const texture = loader.load(
+      [
+        "/mapbox/right.jpg", // px
+        "/mapbox/left.jpg", // nx
+        "/mapbox/top.jpg", // py
+        "/mapbox/bottom.jpg", // ny
+        "/mapbox/front.jpg", // pz
+        "/mapbox/back.jpg", // nz
+      ],
+      () => {
+        console.log("Cube texture loaded successfully");
+        scene.current.background = texture;
+      },
+      undefined,
+      (error) => {
+        console.error("Error loading cube texture:", error);
+      }
+    );
 
-      const ambientLight = new THREE.AmbientLight(0xaaaaaaaa); // Soft white light
+
+      const ambientLight = new THREE.AmbientLight(0xffffffff, 0.5); // Soft white light
       scene.current.add(ambientLight);
 
       const directionalLight = new THREE.DirectionalLight(0xffffffff, 1); // Bright white light
-      directionalLight.position.set(5, 10, 7.5);
+      directionalLight.position.set(0, 10, 10);
       scene.current.add(directionalLight);
 
       // Add axes helper
@@ -52,7 +59,7 @@ const Chess = () => {
       scene.current.add(axesHelper);
 
       // Set the initial camera position
-      camera.current.position.set(0, 7.5, -7.5);
+      camera.current.position.set(-7.5, 7.5, 0);
       camera.current.lookAt(0, 0, 0); // Look at the center of the board
 
       controls.current = new OrbitControls(
