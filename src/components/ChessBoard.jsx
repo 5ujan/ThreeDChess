@@ -49,16 +49,7 @@ const ChessBoard = ({ scene }) => {
       }
     }
 
-    // const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Soft white light
-    // scene.add(ambientLight);
-
-    // const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5); // Bright white light
-    // directionalLight.position.set(5, 10, 7.5);
-    // scene.add(directionalLight);
-
-    // const pointLight = new THREE.PointLight(0xffffff, 1, 100); // Intensity, Distance
-    // pointLight.position.set(0, 10, 0);
-    // scene.add(pointLight);
+   
 
     scene.add(board.current);
 

@@ -29,12 +29,12 @@ const Chess = () => {
     const loader = new THREE.CubeTextureLoader();
     const texture = loader.load(
       [
-        "/mapbox/right.jpg", // px
-        "/mapbox/left.jpg", // nx
-        "/mapbox/top.jpg", // py
-        "/mapbox/bottom.jpg", // ny
-        "/mapbox/front.jpg", // pz
-        "/mapbox/back.jpg", // nz
+        "/skybox/right", // px
+        "/skybox/left.png", // nx
+        "/skybox/top.png", // py
+        "/skybox/bottom.png", // ny
+        "/skybox/front.png", // pz
+        "/skybox/back.png", // nz
       ],
       () => {
         console.log("Cube texture loaded successfully");

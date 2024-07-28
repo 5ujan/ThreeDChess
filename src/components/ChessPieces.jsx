@@ -89,13 +89,12 @@ const ChessPieces = ({ scene }) => {
     // Move the pawn from a2 to a3 after 10 seconds
     setTimeout(() => {
       movePiece("a2", "a3");
-    }, 10000);
-    setTimeout(() => {
+       setTimeout(() => {
       movePiece("a3", "a4");
     }, 12000);
-    setTimeout(() => {
-      movePiece("a2", "a4");
-    }, 14000);
+    }, 10000);
+   
+   
     setTimeout(() => {
       movePiece("b2", "b4");
     }, 16000);
