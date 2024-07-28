@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "chess.js": "^1.0.0-beta.8",
     "gsap": "^3.12.5",
     "pgn-parser": "^2.2.0",
     "react": "^18.3.1",

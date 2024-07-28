@@ -12,6 +12,46 @@ const Chess = () => {
   const controls = useRef(null);
   const rotationAnimation = useRef(null);
 
+  const rotateCamera = () => {
+    if (rotationAnimation.current) {
+      cancelAnimationFrame(rotationAnimation.current);
+    }
+
+    const startAngle = Math.atan2(
+      camera.current.position.z,
+      camera.current.position.x
+    );
+    const endAngle = startAngle + Math.PI;
+    const duration = 1000; // 1 second
+    const startTime = performance.now();
+
+    const animateRotation = (currentTime) => {
+      const elapsedTime = currentTime - startTime;
+      const progress = Math.min(elapsedTime / duration, 1);
+      const currentAngle = startAngle + (endAngle - startAngle) * progress;
+
+      const radius = Math.sqrt(
+        Math.pow(camera.current.position.x, 2) +
+          Math.pow(camera.current.position.z, 2)
+      );
+
+      camera.current.position.x = radius * Math.cos(currentAngle);
+      camera.current.position.z = radius * Math.sin(currentAngle);
+      camera.current.lookAt(0, 0, 0);
+      controls.current.update();
+
+      if (progress < 1) {
+        rotationAnimation.current = requestAnimationFrame(animateRotation);
+      } else {
+        rotationAnimation.current = null;
+        console.log("Rotation complete");
+      }
+    };
+
+    rotationAnimation.current = requestAnimationFrame(animateRotation);
+  };
+
+
   useEffect(() => {
     const initialize = () => {
       camera.current = new THREE.PerspectiveCamera(
@@ -77,45 +117,7 @@ const Chess = () => {
       }
     };
 
-    const rotateCamera = () => {
-      if (rotationAnimation.current) {
-        cancelAnimationFrame(rotationAnimation.current);
-      }
-
-      const startAngle = Math.atan2(
-        camera.current.position.z,
-        camera.current.position.x
-      );
-      const endAngle = startAngle + Math.PI;
-      const duration = 1000; // 1 second
-      const startTime = performance.now();
-
-      const animateRotation = (currentTime) => {
-        const elapsedTime = currentTime - startTime;
-        const progress = Math.min(elapsedTime / duration, 1);
-        const currentAngle = startAngle + (endAngle - startAngle) * progress;
-
-        const radius = Math.sqrt(
-          Math.pow(camera.current.position.x, 2) +
-            Math.pow(camera.current.position.z, 2)
-        );
-
-        camera.current.position.x = radius * Math.cos(currentAngle);
-        camera.current.position.z = radius * Math.sin(currentAngle);
-        camera.current.lookAt(0, 0, 0);
-        controls.current.update();
-
-        if (progress < 1) {
-          rotationAnimation.current = requestAnimationFrame(animateRotation);
-        } else {
-          rotationAnimation.current = null;
-          console.log("Rotation complete");
-        }
-      };
-
-      rotationAnimation.current = requestAnimationFrame(animateRotation);
-    };
-
+    
     const animate = () => {
       controls.current.update();
       renderer.current.render(scene.current, camera.current);
@@ -157,7 +159,7 @@ const Chess = () => {
     <>
       <canvas ref={canvasRef} />
       <ChessBoard scene={scene.current} />
-      <ChessPieces scene={scene.current} />
+      <ChessPieces scene={scene.current} rotateCamera={rotateCamera} />
     </>
   );
 };

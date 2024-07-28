@@ -6,6 +6,7 @@ const App = () => {
   return (
     <div>
       <Chess />
+      {/* <ChessLogger></ChessLogger> */}
       {/* <ThreeModelViewer></ThreeModelViewer> */}
     </div>
   );
