@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import * as THREE from "three";
 import { coordinates } from "./coordinates";
@@ -6,6 +6,8 @@ import { gsap } from "gsap";
 
 const ChessPieces = ({ scene }) => {
   const pieces = useRef(new Map());
+  const [board, setBoard] = useState(new Map());
+  const isInitialized = useRef(false);
 
   const loadModel = (square, modelPath, name) => {
     const { x, z } = coordinates[square];
@@ -41,13 +43,19 @@ const ChessPieces = ({ scene }) => {
         onComplete: () => {
           pieces.current.delete(startSquare); // Remove the reference from the map
           pieces.current.set(endSquare, piece); // Update the reference in the map
+          setBoard((prevBoard) => {
+            const newBoard = new Map(prevBoard);
+            newBoard.delete(startSquare);
+            newBoard.set(endSquare, piece);
+            return newBoard;
+          });
         },
       });
     }
   };
 
   useEffect(() => {
-    if (!scene) return;
+    if (!scene || isInitialized.current) return;
 
     // Clear any existing pieces
     pieces.current.forEach((piece) => scene.remove(piece));
@@ -90,7 +98,9 @@ const ChessPieces = ({ scene }) => {
     }, 14000);
     setTimeout(() => {
       movePiece("b2", "b4");
-    }, 14000);
+    }, 16000);
+
+    isInitialized.current = true;
 
     return () => {
       pieces.current.forEach((piece) => {
