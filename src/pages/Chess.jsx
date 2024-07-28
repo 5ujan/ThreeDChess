@@ -12,7 +12,6 @@ const Chess = () => {
   const controls = useRef(null);
   const rotationAnimation = useRef(null);
 
-
   useEffect(() => {
     const initialize = () => {
       camera.current = new THREE.PerspectiveCamera(
@@ -26,26 +25,25 @@ const Chess = () => {
       renderer.current.setSize(window.innerWidth, window.innerHeight);
 
       // Load background textures
-    const loader = new THREE.CubeTextureLoader();
-    const texture = loader.load(
-      [
-        "/skybox/right", // px
-        "/skybox/left.png", // nx
-        "/skybox/top.png", // py
-        "/skybox/bottom.png", // ny
-        "/skybox/front.png", // pz
-        "/skybox/back.png", // nz
-      ],
-      () => {
-        console.log("Cube texture loaded successfully");
-        scene.current.background = texture;
-      },
-      undefined,
-      (error) => {
-        console.error("Error loading cube texture:", error);
-      }
-    );
-
+      const loader = new THREE.CubeTextureLoader();
+      const texture = loader.load(
+        [
+          "/skybox/right.png", // px
+          "/skybox/left.png", // nx
+          "/skybox/top.png", // py
+          "/skybox/bottom.png", // ny
+          "/skybox/front.png", // pz
+          "/skybox/back.png", // nz
+        ],
+        () => {
+          console.log("Cube texture loaded successfully");
+          scene.current.background = texture;
+        },
+        undefined,
+        (error) => {
+          console.error("Error loading cube texture:", error);
+        }
+      );
 
       const ambientLight = new THREE.AmbientLight(0xffffffff, 0.5); // Soft white light
       scene.current.add(ambientLight);
