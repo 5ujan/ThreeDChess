@@ -4,7 +4,6 @@ import * as THREE from "three";
 
 const ChessBoard = ({ scene }) => {
   const board = useRef(null);
-
   useEffect(() => {
     if (!scene) return;
 

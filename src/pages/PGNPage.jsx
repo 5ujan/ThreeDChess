@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import ChessBoard from "../components/ChessBoard";
-import ChessPieces from "../components/ChessPieces";
-import PlaySound from "../components/PlaySound";
-import { useLocation, Link } from "react-router-dom";
+import { Chess } from "chess.js";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { useGlobalContext } from "../components/Context";
 
-const Chess = () => {
+const PGNPage = () => {
+  const navigate = useNavigate();
+  const chess = new Chess();
   const canvasRef = useRef(null);
   const scene = useRef(new THREE.Scene());
   const camera = useRef(null);
@@ -16,7 +16,25 @@ const Chess = () => {
   const rotationAnimation = useRef(null);
   const [isHome, setIsHome] = useState(true);
   const { pgn, setPgn } = useGlobalContext();
+  const [text, setText] = useState("");
   const location = useLocation();
+  const [isErr, setErr] = useState(false);
+
+  const handleChange = async (e) => {
+    setText(e.target.value);
+    try {
+      chess.loadPgn(e.target.value);
+
+      setErr(false);
+    } catch (err) {
+      setErr(true);
+    }
+  };
+
+  const handleSubmit = () => {
+    setPgn(text);
+  };
+
   const rotateCamera = () => {
     if (rotationAnimation.current) {
       cancelAnimationFrame(rotationAnimation.current);
@@ -49,7 +67,6 @@ const Chess = () => {
         rotationAnimation.current = requestAnimationFrame(animateRotation);
       } else {
         rotationAnimation.current = null;
-        // console.log("Rotation complete");
       }
     };
 
@@ -81,7 +98,7 @@ const Chess = () => {
           "/skybox/back.png", // nz
         ],
         () => {
-          console.log("Cube texture loaded successfully");
+          // console.log("Cube texture loaded successfully")
           scene.current.background = texture;
         },
         undefined,
@@ -90,12 +107,12 @@ const Chess = () => {
         }
       );
 
-      const ambientLight = new THREE.AmbientLight(0xffffffff, 0.5); // Soft white light
-      scene.current.add(ambientLight);
+      //   const ambientLight = new THREE.AmbientLight(0xffffffff, 0.5); // Soft white light
+      //   scene.current.add(ambientLight);
 
-      const directionalLight = new THREE.DirectionalLight(0xffffffff, 1); // Bright white light
-      directionalLight.position.set(0, 10, 10);
-      scene.current.add(directionalLight);
+      //   const directionalLight = new THREE.DirectionalLight(0xffffffff, 1); // Bright white light
+      //   directionalLight.position.set(0, 10, 10);
+      //   scene.current.add(directionalLight);
 
       // Add axes helper
       // const axesHelper = new THREE.AxesHelper(5);
@@ -161,23 +178,41 @@ const Chess = () => {
 
   return (
     <>
+      <div
+        className={`z-10 absolute mt-12 bg-gray-800 bg-opacity-50 w-[80vw] h-[70vh] rounded-md right-[10vw] flex flex-col items-center gap-3`}
+      >
+        <h1 className="text-center text-xl p-3">Add PGN Here</h1>
+        <textarea
+          id="textarea"
+          value={text}
+          onChange={handleChange}
+          className={`w-full bg-transparent  flex-1  text-white text-opacity-70 p-10 border-none outline-none resize-none ${
+            isErr ? "underline decoration-red-500" : ""
+          }`}
+        />
+        {isErr ? (
+          <div className="p-4 text-red-500 font-bold mt-[-2rem]">
+            Invalid PGN{" "}
+          </div>
+        ) : (
+          <button
+            className="bg-blue-600 p-2 px-4 mx-auto m-3 rounded"
+            onClick={() => {
+              setPgn(text)
+              navigate("/");
+            }}
+          >
+            View Game
+          </button>
+        )}
+      </div>
+
       <canvas ref={canvasRef} style={{ display: "block" }} />
       {/* <div className="hidden"> */}
-      <Link
-        to="/pgn"
-        className="rounded px-4 py-2 z-20 absolute top-[2rem] right-[2rem]"
-        onClick={() => {
-          setIsHome(false);
-          // console.log("changed");
-        }}
-      >
-        Add PGN
-      </Link>
-      <ChessBoard scene={scene.current} />
-      <ChessPieces scene={scene.current} rotateCamera={rotateCamera} />
+
       {/* </div> */}
     </>
   );
 };
 
-export default Chess;
+export default PGNPage;

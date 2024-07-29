@@ -43,6 +43,6 @@ export function convertPgnToMoves(pgn) {
     }
   });
 
-  console.log(convertedMoves); // Log the moves
+  // console.log(convertedMoves); // Log the moves
   return convertedMoves;
 }

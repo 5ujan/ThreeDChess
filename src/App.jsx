@@ -1,14 +1,25 @@
 import React from "react";
 import Chess from "./pages/Chess";
-import ThreeModelViewer from "./Model";
+import PGNPage from "./pages/PGNPage";
+import AppProvider from "./components/Context";
+import PlaySound from "./components/PlaySound";
+import { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 const App = () => {
   return (
-    <div>
-      <Chess />
-      {/* <ChessLogger></ChessLogger> */}
-      {/* <ThreeModelViewer></ThreeModelViewer> */}
-    </div>
+    <>
+      <AppProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" Component={Chess}></Route>
+            <Route path="/pgn" Component={PGNPage}></Route>
+            {/* <Route path="/" Component={Home}></Route> */}
+          </Routes>
+        </BrowserRouter>
+        <PlaySound></PlaySound>
+      </AppProvider>
+    </>
   );
 };
 

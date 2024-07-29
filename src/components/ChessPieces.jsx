@@ -4,19 +4,22 @@ import * as THREE from "three";
 import { coordinates } from "./coordinates";
 import { gsap } from "gsap";
 import { convertPgnToMoves } from "./pgnConverter";
+import { useGlobalContext } from "./Context";
 
 const ChessPieces = ({ scene, rotateCamera }) => {
   const pieces = useRef(new Map());
+
   const [board, setBoard] = useState(new Map());
   const isInitialized = useRef(false);
-  const pgn = `
+  const { pgn, audioRef } = useGlobalContext();
 
-1. e4 c6 2. f4 d5 3. e5 f6 4. Nf3 Bg4 5. Be2 fxe5 6. fxe5 Nd7 7. d4 e6 8. h3
-Bxf3 9. Bxf3 c5 10. O-O cxd4 11. Na3 Nh6 12. Bxh6 gxh6 13. c3 dxc3 14. bxc3 Rc8
-15. Nb5 Qb6+ 16. Nd4 Bc5 17. Rb1 Bxd4+ 18. Qxd4 Qxd4+ 19. cxd4 Rc2 20. a3 b6 21.
-Bh5+ Ke7 22. Bf3 Rhc8 23. Bg4 R8c4 24. Rfd1 Ra2 25. Be2 Rcc2 26. Bd3 Rxg2+ 27.
-Kh1 Rh2+ 28. Kg1 Rxh3 29. Bxh7 Raxa3 30. Rf1 Raf3 31. Bg6 Rhg3+ 32. Kh2 Rxf1 33.
-Rxf1 Rxg6 0-1`; // Example PGN
+  const playSound = () => {
+    if (audioRef.current) {
+      audioRef.current.play();
+    } else {
+      console.error("audioRef.current is null");
+    }
+  };
 
   const loadModel = (square, modelPath, name) => {
     const { x, z } = coordinates[square];
@@ -59,6 +62,7 @@ Rxf1 Rxg6 0-1`; // Example PGN
     if (piece) {
       // Remove any piece at the destination square
 
+      setTimeout(() => playSound(), 1300);
       // Move piece using gsap
       gsap.to(piece.position, {
         duration: 2, // Duration of the move in seconds
@@ -82,26 +86,23 @@ Rxf1 Rxg6 0-1`; // Example PGN
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
- const animateMoves = async (moves) => {
-   for (const move of moves) {
-     const [startSquare, endSquare, isCastle] = [
-       move.from,
-       move.to,
-       move.isCastle,
-     ];
-     console.log("here");
-     if (startSquare && endSquare) {
-       movePiece(startSquare, endSquare);
-       console.log("move");
-       await delay(2000); // Wait for 2 seconds before making the next move
-       if (!isCastle) {
-         rotateCamera();
-         await delay(2000);
-       }
-     }
-   }
- };
-
+  const animateMoves = async (moves) => {
+    for (const move of moves) {
+      const [startSquare, endSquare, isCastle] = [
+        move.from,
+        move.to,
+        move.isCastle,
+      ];
+      if (startSquare && endSquare) {
+        movePiece(startSquare, endSquare);
+        await delay(2000); // Wait for 2 seconds before making the next move
+        if (!isCastle) {
+          rotateCamera();
+          await delay(2000);
+        }
+      }
+    }
+  };
 
   useEffect(() => {
     if (!scene || isInitialized.current) return;
