@@ -15,7 +15,7 @@ const PlaySound = () => {
       <audio ref={audioRef}>
         <source src="/ThreeDChess/piecemove.mp3" type="audio/mpeg" />
       </audio>
-      <button onClick={playSound}>Play Sound</button>
+      {/* <button onClick={playSound}>Play Sound</button> */}
     </div>
   );
 };
