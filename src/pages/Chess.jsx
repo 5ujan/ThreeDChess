@@ -73,12 +73,12 @@ const Chess = () => {
       const loader = new THREE.CubeTextureLoader();
       const texture = loader.load(
         [
-          "/skybox/right.png", // px
-          "/skybox/left.png", // nx
-          "/skybox/top.png", // py
-          "/skybox/bottom.png", // ny
-          "/skybox/front.png", // pz
-          "/skybox/back.png", // nz
+          "/ThreeDChess/skybox/right.png", // px
+          "/ThreeDChess/skybox/left.png", // nx
+          "/ThreeDChess/skybox/top.png", // py
+          "/ThreeDChess/skybox/bottom.png", // ny
+          "/ThreeDChess/skybox/front.png", // pz
+          "/ThreeDChess/skybox/back.png", // nz
         ],
         () => {
           console.log("Cube texture loaded successfully");

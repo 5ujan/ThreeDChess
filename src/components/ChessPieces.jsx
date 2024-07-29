@@ -114,27 +114,35 @@ const ChessPieces = ({ scene, rotateCamera }) => {
     // Load pawns
     const alpha = "abcdefgh";
     for (let i = 1; i <= 8; i++) {
-      loadModel(`${alpha[i - 1]}2`, "/white/white-pawn.glb", `white-pawn-${i}`); // White pawns
-      loadModel(`${alpha[i - 1]}7`, "/black/black-pawn.glb", `black-pawn-${i}`); // Black pawns
+      loadModel(
+        `${alpha[i - 1]}2`,
+        "/ThreeDChess/white/white-pawn.glb",
+        `white-pawn-${i}`
+      ); // White pawns
+      loadModel(
+        `${alpha[i - 1]}7`,
+        "/ThreeDChess/black/black-pawn.glb",
+        `black-pawn-${i}`
+      ); // Black pawns
     }
 
     // Load other pieces (rooks, knights, bishops, queens, kings)
-    loadModel("a1", "/white/white-rook.glb", "white-rook-a1");
-    loadModel("h1", "/white/white-rook.glb", "white-rook-h1");
-    loadModel("a8", "/black/black-rook.glb", "black-rook-a8");
-    loadModel("h8", "/black/black-rook.glb", "black-rook-h8");
-    loadModel("b1", "/white/white-knight.glb", "white-knight-b1");
-    loadModel("g1", "/white/white-knight.glb", "white-knight-g1");
-    loadModel("b8", "/black/black-knight.glb", "black-knight-b8");
-    loadModel("g8", "/black/black-knight.glb", "black-knight-g8");
-    loadModel("c1", "/white/white-bishop.glb", "white-bishop-c1");
-    loadModel("f1", "/white/white-bishop.glb", "white-bishop-f1");
-    loadModel("c8", "/black/black-bishop.glb", "black-bishop-c8");
-    loadModel("f8", "/black/black-bishop.glb", "black-bishop-f8");
-    loadModel("d1", "/white/white-queen.glb", "white-queen-d1");
-    loadModel("d8", "/black/black-queen.glb", "black-queen-d8");
-    loadModel("e1", "/white/white-king.glb", "white-king-e1");
-    loadModel("e8", "/black/black-king.glb", "black-king-e8");
+    loadModel("a1", "/ThreeDChess/white/white-rook.glb", "white-rook-a1");
+    loadModel("h1", "/ThreeDChess/white/white-rook.glb", "white-rook-h1");
+    loadModel("a8", "/ThreeDChess/black/black-rook.glb", "black-rook-a8");
+    loadModel("h8", "/ThreeDChess/black/black-rook.glb", "black-rook-h8");
+    loadModel("b1", "/ThreeDChess/white/white-knight.glb", "white-knight-b1");
+    loadModel("g1", "/ThreeDChess/white/white-knight.glb", "white-knight-g1");
+    loadModel("b8", "/ThreeDChess/black/black-knight.glb", "black-knight-b8");
+    loadModel("g8", "/ThreeDChess/black/black-knight.glb", "black-knight-g8");
+    loadModel("c1", "/ThreeDChess/white/white-bishop.glb", "white-bishop-c1");
+    loadModel("f1", "/ThreeDChess/white/white-bishop.glb", "white-bishop-f1");
+    loadModel("c8", "/ThreeDChess/black/black-bishop.glb", "black-bishop-c8");
+    loadModel("f8", "/ThreeDChess/black/black-bishop.glb", "black-bishop-f8");
+    loadModel("d1", "/ThreeDChess/white/white-queen.glb", "white-queen-d1");
+    loadModel("d8", "/ThreeDChess/black/black-queen.glb", "black-queen-d8");
+    loadModel("e1", "/ThreeDChess/white/white-king.glb", "white-king-e1");
+    loadModel("e8", "/ThreeDChess/black/black-king.glb", "black-king-e8");
 
     // Parse PGN and animate moves
     const moves = convertPgnToMoves(pgn);

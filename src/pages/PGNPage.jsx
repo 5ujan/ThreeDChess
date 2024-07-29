@@ -14,7 +14,6 @@ const PGNPage = () => {
   const renderer = useRef(null);
   const controls = useRef(null);
   const rotationAnimation = useRef(null);
-  const [isHome, setIsHome] = useState(true);
   const { pgn, setPgn } = useGlobalContext();
   const [text, setText] = useState("");
   const location = useLocation();
@@ -74,7 +73,6 @@ const PGNPage = () => {
   };
 
   useEffect(() => {
-    location.pathname === "/" ? setIsHome(false) : setIsHome(true);
     const initialize = () => {
       camera.current = new THREE.PerspectiveCamera(
         75,
@@ -90,12 +88,12 @@ const PGNPage = () => {
       const loader = new THREE.CubeTextureLoader();
       const texture = loader.load(
         [
-          "/skybox/right.png", // px
-          "/skybox/left.png", // nx
-          "/skybox/top.png", // py
-          "/skybox/bottom.png", // ny
-          "/skybox/front.png", // pz
-          "/skybox/back.png", // nz
+          "/ThreeDChess/skybox/right.png", // px
+          "/ThreeDChess/skybox/left.png", // nx
+          "/ThreeDChess/skybox/top.png", // py
+          "/ThreeDChess/skybox/bottom.png", // ny
+          "/ThreeDChess/skybox/front.png", // pz
+          "/ThreeDChess/skybox/back.png", // nz
         ],
         () => {
           // console.log("Cube texture loaded successfully")

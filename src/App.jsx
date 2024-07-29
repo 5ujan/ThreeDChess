@@ -10,7 +10,7 @@ const App = () => {
   return (
     <>
       <AppProvider>
-        <BrowserRouter>
+        <BrowserRouter basename="/ThreeDChess/">
           <Routes>
             <Route path="/" Component={Chess}></Route>
             <Route path="/pgn" Component={PGNPage}></Route>
