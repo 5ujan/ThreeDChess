@@ -1,6 +1,12 @@
 # ThreeDChess
 A 3d chess board simulation with ThreeJS. Upload games in PGN(portable game notation) format to view your own games!
 
+## Site
+
+Site is live at (5ujan.github.io/ThreeDChess)[https://5ujan.github.io/ThreeDChess]
+
+## Running locally
+
 Clone the repository with
 
 ```git clone https://github.com/5ujan/ThreeDChess.git```
