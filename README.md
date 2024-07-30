@@ -3,7 +3,7 @@ A 3d chess board simulation with ThreeJS. Upload games in PGN(portable game nota
 
 ## Site
 
-Site is live at (5ujan.github.io/ThreeDChess)[https://5ujan.github.io/ThreeDChess]
+Site is live at [5ujan.github.io/ThreeDChess](https://5ujan.github.io/ThreeDChess)
 
 ## Running locally
 
